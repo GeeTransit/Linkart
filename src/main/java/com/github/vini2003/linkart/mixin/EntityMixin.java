@@ -1,6 +1,6 @@
 package com.github.vini2003.linkart.mixin;
 
-import com.github.vini2003.linkart.accessor.LinkableMinecartsAccessor;
+import com.github.vini2003.linkart.api.LinkableMinecart;
 import com.github.vini2003.linkart.utility.CollisionUtils;
 import net.minecraft.block.AbstractRailBlock;
 import net.minecraft.entity.Entity;
@@ -28,9 +28,9 @@ public abstract class EntityMixin {
     @Inject(at = @At("HEAD"), method = "remove")
     void linkart$removeLink(CallbackInfo callbackInformation) {
         if ((Object) this instanceof AbstractMinecartEntity && !world.isClient()) {
-            LinkableMinecartsAccessor accessor = (LinkableMinecartsAccessor) this;
-            LinkableMinecartsAccessor follower = (LinkableMinecartsAccessor) accessor.linkart$getFollower();
-            LinkableMinecartsAccessor following = (LinkableMinecartsAccessor) accessor.linkart$getFollowing();
+            LinkableMinecart accessor = (LinkableMinecart) this;
+            LinkableMinecart follower = (LinkableMinecart) accessor.linkart$getFollower();
+            LinkableMinecart following = (LinkableMinecart) accessor.linkart$getFollowing();
 
             if (follower != null) {
                 follower.linkart$setFollowing(null);

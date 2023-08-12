@@ -1,7 +1,7 @@
 package com.github.vini2003.linkart.mixin;
 
 import com.github.vini2003.linkart.Linkart;
-import com.github.vini2003.linkart.accessor.LinkableMinecartsAccessor;
+import com.github.vini2003.linkart.api.LinkableMinecart;
 import com.github.vini2003.linkart.utility.CollisionUtils;
 import com.github.vini2003.linkart.utility.LoadingCarts;
 import net.minecraft.entity.Entity;
@@ -26,7 +26,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.UUID;
 
 @Mixin({AbstractMinecartEntity.class})
-public abstract class AbstractMinecartEntityMixin extends Entity implements LinkableMinecartsAccessor {
+public abstract class AbstractMinecartEntityMixin extends Entity implements LinkableMinecart {
     @Unique
     private AbstractMinecartEntity linkart$following;
     @Unique
@@ -42,7 +42,7 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Link
         super(type, world);
     }
 
-    private static void linkart$spawnChainParticles(AbstractMinecartEntity entity, LinkableMinecartsAccessor duck) {
+    private static void linkart$spawnChainParticles(AbstractMinecartEntity entity, LinkableMinecart duck) {
         if (!entity.world.isClient()) {
             ((ServerWorld) entity.world).spawnParticles(new ItemStackParticleEffect(ParticleTypes.ITEM, duck.linkart$getLinkItem()), entity.getX(), entity.getY() + 0.3, entity.getZ(), 15, 0.2, 0.2, 0.2, 0.2);
         }
@@ -64,11 +64,11 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Link
                 Vec3d pos = getPos();
                 Vec3d pos2 = linkart$getFollowing().getPos();
                 double dist = Math.abs(pos.distanceTo(pos2)) - 1.2;
-                Vec3d vec3d = pos.relativize(pos2).normalize();
+                Vec3d vec3d = pos.relativize(pos2);
                 vec3d.multiply(Linkart.CONFIG.velocityMultiplier);
 
                 if (dist <= 1) {
-                    setVelocity(vec3d.multiply(dist * 0.75));
+                    setVelocity(vec3d.multiply(dist * 0.3));
                 } else {
                     if (dist <= Linkart.CONFIG.pathfindingDistance) {
                         setVelocity(vec3d);
@@ -90,7 +90,7 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Link
     }
 
     private void linkart$unlink() {
-        LinkableMinecartsAccessor duck = (LinkableMinecartsAccessor) linkart$getFollowing();
+        LinkableMinecart duck = (LinkableMinecart) linkart$getFollowing();
 
         duck.linkart$setFollower(null);
         linkart$setFollowing(null);

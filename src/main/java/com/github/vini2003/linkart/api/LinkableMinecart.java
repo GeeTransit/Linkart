@@ -1,9 +1,9 @@
-package com.github.vini2003.linkart.accessor;
+package com.github.vini2003.linkart.api;
 
 import net.minecraft.entity.vehicle.AbstractMinecartEntity;
 import net.minecraft.item.ItemStack;
 
-public interface LinkableMinecartsAccessor {
+public interface LinkableMinecart {
     AbstractMinecartEntity linkart$getFollowing();
 
     void linkart$setFollowing(AbstractMinecartEntity following);

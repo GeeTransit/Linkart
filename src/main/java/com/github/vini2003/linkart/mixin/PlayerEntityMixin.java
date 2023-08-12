@@ -1,7 +1,7 @@
 package com.github.vini2003.linkart.mixin;
 
 import com.github.vini2003.linkart.Linkart;
-import com.github.vini2003.linkart.accessor.LinkableMinecartsAccessor;
+import com.github.vini2003.linkart.api.LinkableMinecart;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ItemEntity;
@@ -27,7 +27,7 @@ public abstract class PlayerEntityMixin extends LivingEntity {
         super(entityType, world);
     }
 
-    private static void linkart$spawnChainParticles(AbstractMinecartEntity entity, LinkableMinecartsAccessor duck) {
+    private static void linkart$spawnChainParticles(AbstractMinecartEntity entity, LinkableMinecart duck) {
         if (!entity.world.isClient()) {
             ((ServerWorld) entity.world).spawnParticles(new ItemStackParticleEffect(ParticleTypes.ITEM, duck.linkart$getLinkItem()), entity.getX(), entity.getY() + 0.3, entity.getZ(), 15, 0.2, 0.2, 0.2, 0.2);
         }
@@ -39,7 +39,7 @@ public abstract class PlayerEntityMixin extends LivingEntity {
             AbstractMinecartEntity minecart = (AbstractMinecartEntity) entity;
             if (!world.isClient()) {
                 PlayerEntity player = (PlayerEntity) (Object) this;
-                LinkableMinecartsAccessor duck = (LinkableMinecartsAccessor) minecart;
+                LinkableMinecart duck = (LinkableMinecart) minecart;
                 ItemStack stack = player.getStackInHand(hand);
 
                 if (stack.isIn(Linkart.LINKERS)) {
@@ -52,7 +52,7 @@ public abstract class PlayerEntityMixin extends LivingEntity {
                             ((ServerWorld) entity.world).spawnParticles(ParticleTypes.ANGRY_VILLAGER, minecart.getX(), minecart.getY() + 0.2, minecart.getZ(), 10, 0.5, 0.5, 0.5, 0.5);
                             cir.setReturnValue(ActionResult.FAIL);
                         } else {
-                            LinkableMinecartsAccessor duck1 = (LinkableMinecartsAccessor) unlinking;
+                            LinkableMinecart duck1 = (LinkableMinecart) unlinking;
                             if (duck1.linkart$getFollower() == minecart) {
 
                                 duck.linkart$setFollowing(null);
@@ -86,7 +86,7 @@ public abstract class PlayerEntityMixin extends LivingEntity {
                             ((ServerWorld) entity.world).spawnParticles(ParticleTypes.ANGRY_VILLAGER, minecart.getX(), minecart.getY() + 0.2, minecart.getZ(), 10, 0.5, 0.5, 0.5, 0.5);
                             cir.setReturnValue(ActionResult.FAIL);
                         } else {
-                            LinkableMinecartsAccessor duck1 = (LinkableMinecartsAccessor) linkingTo;
+                            LinkableMinecart duck1 = (LinkableMinecart) linkingTo;
 
                             duck.linkart$setFollowing(linkingTo);
                             duck1.linkart$setFollower(minecart);
