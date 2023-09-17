@@ -1,5 +1,7 @@
 package com.github.vini2003.linkart;
 
+import com.github.vini2003.linkart.compat.audaki.AudakiCartIntegration;
+import com.github.vini2003.linkart.compat.Mods;
 import com.github.vini2003.linkart.configuration.LinkartConfiguration;
 import com.github.vini2003.linkart.mixin.PersistentStateAccessor;
 import com.github.vini2003.linkart.utility.LinkartCommand;
@@ -11,6 +13,8 @@ import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
 import net.fabricmc.loader.api.FabricLoader;
+import net.fabricmc.loader.api.Version;
+import net.fabricmc.loader.api.VersionParsingException;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.vehicle.AbstractMinecartEntity;
 import net.minecraft.item.Item;
@@ -51,6 +55,20 @@ public class Linkart implements ModInitializer {
                 LoadingCarts.getOrCreate(world).tick();
             }
         });
+
+        try {
+            if (
+                Mods.AUDAKI_CART_ENGINE.isLoaded
+                && Mods.AUDAKI_CART_ENGINE.version.compareTo(Version.parse("2.1.0")) >= 0
+            ) {
+                System.out.println("[Linkart] Version minimum met, loading AudakiCartIntegration");
+                Mods.AUDAKI_CART_ENGINE.executeIfInstalled(() -> () -> AudakiCartIntegration.init());
+            } else {
+                System.out.println("[Linkart] Version minimum not met, not loading AudakiCartIntegration");
+            }
+        } catch (VersionParsingException e) {
+            System.out.println("[Linkart] VersionParsingException during AudakiCartIntegration init, ignoring since should never happen");
+        }
     }
 
     public static void loadConfig() {
